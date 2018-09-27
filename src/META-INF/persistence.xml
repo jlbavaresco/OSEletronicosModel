@@ -4,6 +4,9 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>br.edu.ifsul.modelo.Cidade</class>
     <class>br.edu.ifsul.modelo.Estado</class>
+    <class>br.edu.ifsul.modelo.Permissao</class>
+    <class>br.edu.ifsul.modelo.PessoaFisica</class>
+    <class>br.edu.ifsul.modelo.Usuario</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/oseletronicos"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
