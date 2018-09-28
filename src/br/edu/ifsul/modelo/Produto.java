@@ -1,15 +1,20 @@
 package br.edu.ifsul.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -25,6 +30,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "produto")
 public class Produto implements Serializable {
+
     @Id
     @SequenceGenerator(name = "seq_produto", sequenceName = "seq_produto_id", allocationSize = 1)
     @GeneratedValue(generator = "seq_produto", strategy = GenerationType.SEQUENCE)
@@ -37,16 +43,28 @@ public class Produto implements Serializable {
     @Column(name = "descricao", columnDefinition = "text")
     private String descricao;
     @Min(message = "O preço não pode ser negativo", value = 0)
-    @NotNull(message = "O preço deve ser informado")    
-    @Column(name = "preco", nullable = false, columnDefinition = "numeric(12,2)")    
+    @NotNull(message = "O preço deve ser informado")
+    @Column(name = "preco", nullable = false, columnDefinition = "numeric(12,2)")
     private Double preco;
     @NotNull(message = "A marca deve ser informada")
     @ManyToOne
-    @JoinColumn(name = "marca", referencedColumnName = "id", nullable = false, 
-            foreignKey = @ForeignKey(name = "fk_produto_marca"))        
+    @JoinColumn(name = "marca", referencedColumnName = "id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_produto_marca"))
     private Marca marca;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Arquivo> arquivos = new ArrayList<>();
 
     public Produto() {
+    }
+
+    public void adicionarArquivo(Arquivo obj) {
+        obj.setProduto(this);
+        this.arquivos.add(obj);
+    }
+
+    public void removerArquivo(int index) {
+        this.arquivos.remove(index);
     }
 
     public Integer getId() {
@@ -113,5 +131,13 @@ public class Produto implements Serializable {
     public void setMarca(Marca marca) {
         this.marca = marca;
     }
-        
+
+    public List<Arquivo> getArquivos() {
+        return arquivos;
+    }
+
+    public void setArquivos(List<Arquivo> arquivos) {
+        this.arquivos = arquivos;
+    }
+
 }
