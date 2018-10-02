@@ -33,8 +33,8 @@ public class Arquivo implements Serializable {
     private Integer id;
     @NotNull(message = "O nome do arquivo deve ser informado")
     @NotBlank(message = "O nome do arquivo não pode ser em branco")
-    @Length(max = 50, message = "O nome do arquivo não pode ter mais que {max} caracteres")
-    @Column(name = "nome_arquivo", nullable = false, length = 50)
+    @Length(max = 100, message = "O nome do arquivo não pode ter mais que {max} caracteres")
+    @Column(name = "nome_arquivo", nullable = false, length = 100)
     private String nomeArquivo;
     @NotNull(message = "A descrição deve ser informada")
     @NotBlank(message = "A descrição não pode ser em branco")
