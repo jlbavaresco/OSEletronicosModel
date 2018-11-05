@@ -1,17 +1,22 @@
 package br.edu.ifsul.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -74,18 +79,24 @@ public class OrdemServico implements Serializable {
     @NotNull(message = "A pessoa física deve ser informada")
     @ManyToOne
     @JoinColumn(name = "pessoa_fisica", referencedColumnName = "nome_usuario", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_ordem_servico_pf"))    
+            foreignKey = @ForeignKey(name = "fk_ordem_servico_pf"))
     private PessoaFisica pesssoaFisica;
     @NotNull(message = "O usuário deve ser informado")
     @ManyToOne
     @JoinColumn(name = "usuario", referencedColumnName = "nome_usuario", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_ordem_servico_usuario"))    
+            foreignKey = @ForeignKey(name = "fk_ordem_servico_usuario"))
     private Usuario usuario;
     @NotNull(message = "O equipamento deve ser informado")
     @ManyToOne
     @JoinColumn(name = "equipamento", referencedColumnName = "id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_ordem_servico_equipamento"))      
+            foreignKey = @ForeignKey(name = "fk_ordem_servico_equipamento"))
     private Equipamento equipamento;
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Foto> fotos = new ArrayList<Foto>();
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)    
+    private List<ItemServico> listaServicos = new ArrayList<>();
 
     public OrdemServico() {
         valorProdutos = 0.0;
@@ -94,6 +105,33 @@ public class OrdemServico implements Serializable {
         quantidadeParcelas = 0;
 
     }
+    
+    public void atualizaValorTotal(){
+        this.valorTotal = this.valorProdutos + this.valorServicos;
+    }
+    
+    public void adicionarServico(ItemServico obj){
+        valorServicos += obj.getValorTotal();
+        obj.setOrdemServico(this);
+        this.listaServicos.add(obj);
+        atualizaValorTotal();
+    }
+    
+    public void removerServico(int index){
+        ItemServico obj = this.listaServicos.get(index);
+        valorServicos -= obj.getValorTotal();
+        atualizaValorTotal();
+        this.listaServicos.remove(index);
+    }
+    
+    public void adicionarFoto(Foto obj) {
+        obj.setOrdemServico(this);
+        this.fotos.add(obj);
+    }
+
+    public void removerFoto(int index) {
+        this.fotos.remove(index);
+    }    
 
     public Integer getId() {
         return id;
@@ -205,5 +243,21 @@ public class OrdemServico implements Serializable {
 
     public void setEquipamento(Equipamento equipamento) {
         this.equipamento = equipamento;
+    }
+
+    public List<Foto> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
+    }
+
+    public List<ItemServico> getListaServicos() {
+        return listaServicos;
+    }
+
+    public void setListaServicos(List<ItemServico> listaServicos) {
+        this.listaServicos = listaServicos;
     }
 }
