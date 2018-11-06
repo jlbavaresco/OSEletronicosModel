@@ -21,12 +21,12 @@ import javax.validation.constraints.NotNull;
  * @organization IFSUL - Campus Passo Fundo
  */
 @Entity
-@Table(name = "item_servico")
-public class ItemServico implements Serializable {
+@Table(name = "item_produto")
+public class ItemProduto implements Serializable {
 
     @Id
-    @SequenceGenerator(name = "seq_item_servico", sequenceName = "seq_item_servico_id", allocationSize = 1)
-    @GeneratedValue(generator = "seq_item_servico", strategy = GenerationType.SEQUENCE)    
+    @SequenceGenerator(name = "seq_item_produto", sequenceName = "seq_item_produto_id", allocationSize = 1)
+    @GeneratedValue(generator = "seq_item_produto", strategy = GenerationType.SEQUENCE)    
     private Integer id;
     @Min(message = "A quantidade não pode ser negativa", value = 0)
     @NotNull(message = "A quantidade deve ser informada")
@@ -47,11 +47,11 @@ public class ItemServico implements Serializable {
     private OrdemServico ordemServico;
     @NotNull(message = "O serviço deve ser informado")
     @ManyToOne
-    @JoinColumn(name = "servico", referencedColumnName = "id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_item_servico_servico"))    
-    private Servico servico;
+    @JoinColumn(name = "produto", referencedColumnName = "id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_item_produto_produto"))    
+    private Produto produto;
 
-    public ItemServico() {
+    public ItemProduto() {
     }
 
     public Integer getId() {
@@ -94,12 +94,12 @@ public class ItemServico implements Serializable {
         this.ordemServico = ordemServico;
     }
 
-    public Servico getServico() {
-        return servico;
+    public Produto getProduto() {
+        return produto;
     }
 
-    public void setServico(Servico servico) {
-        this.servico = servico;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ItemServico implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ItemServico other = (ItemServico) obj;
+        final ItemProduto other = (ItemProduto) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

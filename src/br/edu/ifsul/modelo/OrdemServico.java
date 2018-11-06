@@ -95,8 +95,14 @@ public class OrdemServico implements Serializable {
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Foto> fotos = new ArrayList<Foto>();
     @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)    
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ItemServico> listaServicos = new ArrayList<>();
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ItemProduto> listaProdutos = new ArrayList<>();    
+    @OneToMany(mappedBy = "id.ordemServico", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ContaReceber> contasReceber = new ArrayList<>();
 
     public OrdemServico() {
         valorProdutos = 0.0;
@@ -105,25 +111,68 @@ public class OrdemServico implements Serializable {
         quantidadeParcelas = 0;
 
     }
-    
-    public void atualizaValorTotal(){
+
+    public void gerarContasReceber() {
+        if (this.formaPagamento == FormaPagamento.AVISTA) {
+                ContaReceber conta = new ContaReceber();
+                conta.setValor(this.valorTotal);  
+                conta.setValorPago(this.valorTotal);
+                conta.setVencimento(this.dataFechamento);
+                conta.setDataPagamento(this.dataFechamento);
+                ContaReceberID id = new ContaReceberID();
+                id.setNumeroParcela(1);
+                id.setOrdemServico(this);
+                conta.setId(id);
+                this.contasReceber.add(conta); 
+        } else if (this.formaPagamento == FormaPagamento.APRAZO) {
+            Double valorParcela = this.valorTotal / this.quantidadeParcelas;
+            for (int i = 1; i <= this.quantidadeParcelas; i++) {
+                ContaReceber conta = new ContaReceber();
+                conta.setValor(valorParcela);
+                Calendar vencimento = (Calendar) this.dataFechamento.clone();
+                vencimento.add(Calendar.MONTH, i);
+                conta.setVencimento(vencimento);
+                ContaReceberID id = new ContaReceberID();
+                id.setNumeroParcela(i);
+                id.setOrdemServico(this);
+                conta.setId(id);
+                this.contasReceber.add(conta);               
+            }
+        }
+    }
+
+    public void atualizaValorTotal() {
         this.valorTotal = this.valorProdutos + this.valorServicos;
     }
-    
-    public void adicionarServico(ItemServico obj){
+
+    public void adicionarServico(ItemServico obj) {
         valorServicos += obj.getValorTotal();
         obj.setOrdemServico(this);
         this.listaServicos.add(obj);
         atualizaValorTotal();
     }
-    
-    public void removerServico(int index){
+
+    public void removerServico(int index) {
         ItemServico obj = this.listaServicos.get(index);
         valorServicos -= obj.getValorTotal();
         atualizaValorTotal();
         this.listaServicos.remove(index);
     }
     
+    public void adicionarProduto(ItemProduto obj) {
+        valorProdutos += obj.getValorTotal();
+        obj.setOrdemServico(this);
+        this.listaProdutos.add(obj);
+        atualizaValorTotal();
+    }
+
+    public void removerProduto(int index) {
+        ItemProduto obj = this.listaProdutos.get(index);
+        valorProdutos -= obj.getValorTotal();
+        atualizaValorTotal();
+        this.listaProdutos.remove(index);
+    }    
+
     public void adicionarFoto(Foto obj) {
         obj.setOrdemServico(this);
         this.fotos.add(obj);
@@ -131,7 +180,7 @@ public class OrdemServico implements Serializable {
 
     public void removerFoto(int index) {
         this.fotos.remove(index);
-    }    
+    }
 
     public Integer getId() {
         return id;
@@ -259,5 +308,21 @@ public class OrdemServico implements Serializable {
 
     public void setListaServicos(List<ItemServico> listaServicos) {
         this.listaServicos = listaServicos;
+    }
+
+    public List<ContaReceber> getContasReceber() {
+        return contasReceber;
+    }
+
+    public void setContasReceber(List<ContaReceber> contasReceber) {
+        this.contasReceber = contasReceber;
+    }
+
+    public List<ItemProduto> getListaProdutos() {
+        return listaProdutos;
+    }
+
+    public void setListaProdutos(List<ItemProduto> listaProdutos) {
+        this.listaProdutos = listaProdutos;
     }
 }
