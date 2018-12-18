@@ -17,6 +17,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +35,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "usuario")
 @DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING,length = 2)
 @DiscriminatorValue(value = "US")
+@NamedQuery(name="todosUsuarioOrdemNome",query="from Usuario order by nome")	
 public class Usuario implements Serializable {
     @Id
     @NotNull(message = "O nome de usuario não pode ser nulo")

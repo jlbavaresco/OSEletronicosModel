@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,6 +26,11 @@ import org.hibernate.validator.constraints.br.CPF;
 @Entity
 @Table
 @DiscriminatorValue(value = "PF")
+@NamedQueries({
+    @NamedQuery(name = "PessoaFisica.todosOrderNome", query = "from PessoaFisica order by nome")
+    ,
+    @NamedQuery(name = "PessoaFisica.buscaPorCPF", query = "from PessoaFisica where cpf like :pcpf order by nome")
+})
 public class PessoaFisica extends Usuario implements Serializable {
 
     @NotNull(message = "O CPF não pode ser nulo")
@@ -72,17 +79,19 @@ public class PessoaFisica extends Usuario implements Serializable {
     @JoinColumn(name = "cidade", referencedColumnName = "id", nullable = false,
             foreignKey = @ForeignKey(name = "fk_cidade_id"))
     private Cidade cidade;
-    
-    public PessoaFisica(){
+
+    public PessoaFisica() {
         super();
     }
-    
+
     /**
-     * Método para se criar uma pessoa fisica com base em um usuário que já existe
-     * @param usuario registro que já existe no banco
-     * Antes de salvar a nova pessoa física o usuario que já existia no banco deve ser removido
+     * Método para se criar uma pessoa fisica com base em um usuário que já
+     * existe
+     *
+     * @param usuario registro que já existe no banco Antes de salvar a nova
+     * pessoa física o usuario que já existia no banco deve ser removido
      */
-    public PessoaFisica(Usuario usuario){
+    public PessoaFisica(Usuario usuario) {
         super.setNomeUsuario(usuario.getNomeUsuario());
         super.setSenha(usuario.getSenha());
         super.setDataCadastro(usuario.getDataCadastro());
@@ -91,7 +100,7 @@ public class PessoaFisica extends Usuario implements Serializable {
         super.setTelefonePrincipal(usuario.getTelefonePrincipal());
         super.setTelefoneAlternativo(usuario.getTelefoneAlternativo());
         super.setPermissoes(usuario.getPermissoes());
-        
+
     }
 
     public String getCpf() {
