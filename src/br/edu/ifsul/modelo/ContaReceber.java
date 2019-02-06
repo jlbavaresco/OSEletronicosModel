@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -37,6 +38,18 @@ public class ContaReceber implements Serializable {
 
     public ContaReceber() {
     }
+    
+    @Transient
+    public Boolean getVencida(){
+        if (this.dataPagamento != null && this.valorPago != null){
+            return false;
+        }
+        if (this.vencimento.after(Calendar.getInstance())){
+            return false;
+        } else {
+            return true;
+        }       
+    }     
     
     
 
