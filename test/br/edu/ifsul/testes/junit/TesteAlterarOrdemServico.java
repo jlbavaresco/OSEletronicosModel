@@ -24,12 +24,12 @@ import static org.junit.Assert.*;
  *
  * @author Jorge
  */
-public class TestePersistirOrdemServico {
+public class TesteAlterarOrdemServico {
     
     EntityManagerFactory emf;
     EntityManager em;
     
-    public TestePersistirOrdemServico() {
+    public TesteAlterarOrdemServico() {
     }
     
     @Before
@@ -46,18 +46,10 @@ public class TestePersistirOrdemServico {
     
     @Test
     public void teste(){
-        OrdemServico obj = new OrdemServico();
-        obj.setDataAbertura(Calendar.getInstance());
-        obj.setDataFechamento(Calendar.getInstance());
-        obj.setDescricaoProblema("Windows com virus");
-        obj.setEquipamento(em.find(Equipamento.class, 1));
-        obj.setFormaPagamento(FormaPagamento.APRAZO);
-        obj.setPessoaFisica(em.find(PessoaFisica.class, "joao"));        
-        obj.setResolucaoProblema("Formatação");
-        obj.setStatus(Status.ABERTA);
-        obj.setUsuario(em.find(Usuario.class, "jorgebavaresco"));        
+        OrdemServico obj = em.find(OrdemServico.class, 1);
+        obj.setStatus(Status.CANCELADA);
         em.getTransaction().begin();
-        em.persist(obj);
+        em.merge(obj);
         em.getTransaction().commit();        
     }
     

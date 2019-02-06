@@ -80,7 +80,7 @@ public class OrdemServico implements Serializable {
     @ManyToOne
     @JoinColumn(name = "pessoa_fisica", referencedColumnName = "nome_usuario", nullable = false,
             foreignKey = @ForeignKey(name = "fk_ordem_servico_pf"))
-    private PessoaFisica pesssoaFisica;
+    private PessoaFisica pessoaFisica;
     @NotNull(message = "O usuário deve ser informado")
     @ManyToOne
     @JoinColumn(name = "usuario", referencedColumnName = "nome_usuario", nullable = false,
@@ -270,12 +270,12 @@ public class OrdemServico implements Serializable {
         this.quantidadeParcelas = quantidadeParcelas;
     }
 
-    public PessoaFisica getPesssoaFisica() {
-        return pesssoaFisica;
+    public PessoaFisica getPessoaFisica() {
+        return pessoaFisica;
     }
 
-    public void setPesssoaFisica(PessoaFisica pesssoaFisica) {
-        this.pesssoaFisica = pesssoaFisica;
+    public void setPessoaFisica(PessoaFisica pesssoaFisica) {
+        this.pessoaFisica = pesssoaFisica;
     }
 
     public Usuario getUsuario() {

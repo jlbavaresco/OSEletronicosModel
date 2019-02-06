@@ -52,7 +52,7 @@ public class TestePersistirContaReceberAvista {
         obj.setDescricaoProblema("Windows com virus");
         obj.setEquipamento(em.find(Equipamento.class, 1));
         obj.setFormaPagamento(FormaPagamento.AVISTA);
-        obj.setPesssoaFisica(em.find(PessoaFisica.class, "joao"));        
+        obj.setPessoaFisica(em.find(PessoaFisica.class, "joao"));        
         obj.setResolucaoProblema("Formatação");
         obj.setStatus(Status.FECHADA);
         obj.setValorTotal(200.00);
