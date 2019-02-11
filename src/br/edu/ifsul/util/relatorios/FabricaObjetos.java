@@ -1,8 +1,13 @@
 package br.edu.ifsul.util.relatorios;
 
+import br.edu.ifsul.modelo.ContaReceber;
+import br.edu.ifsul.modelo.ContaReceberID;
 import br.edu.ifsul.modelo.Marca;
+import br.edu.ifsul.modelo.OrdemServico;
+import br.edu.ifsul.modelo.PessoaFisica;
 import br.edu.ifsul.modelo.Produto;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -30,6 +35,25 @@ public class FabricaObjetos {
         p2.setNome("Teclado sem fio");
         p2.setPreco(150.00);
         lista.add(p2);  
+        return lista;
+    }
+    
+    public static List<ContaReceber> carregaContas(){
+        List<ContaReceber> lista = new ArrayList<>();
+        PessoaFisica pf = new PessoaFisica();
+        pf.setNome("João da Silva");
+        pf.setCpf("999.999.345-87");
+        OrdemServico os = new OrdemServico();
+        os.setPessoaFisica(pf);
+        os.setId(1);
+        ContaReceber conta = new ContaReceber();
+        ContaReceberID id = new ContaReceberID();
+        id.setOrdemServico(os);
+        id.setNumeroParcela(1);
+        conta.setId(id);
+        conta.setValor(500.00);
+        conta.setVencimento(Calendar.getInstance());
+        lista.add(conta);
         return lista;
     }
 }
